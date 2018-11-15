@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Виоланта Свирид](https://up.htmlacademy.ru/javascript/16/user/564145).
-* Наставник: `Неизвестно`.
+* Наставник: [Анастасия Норцова](https://htmlacademy.ru/profile/id143546).
 
 ---
 
