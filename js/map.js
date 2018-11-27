@@ -113,6 +113,9 @@ var setType = function (element, card) {
     case (card.type === 'palace') :
       element.querySelector('.popup__type').textContent = 'Дворец';
       break;
+    default:
+      element.querySelector('.popup__type').textContent = 'Помещение';
+      break;
   }
 };
 
