@@ -284,6 +284,7 @@ var calculateInactiveMainPinCoordinats = function () {
 // Функция для заполнения поля адреса в активном состоянии страницы
 var setActiveAddressInput = function () {
   addressInput.value = calculateActiveMainPinCoordinats();
+  addressInput.readOnly = true;
 };
 
 // добавление обработчика событий(отпускание элемента) на главную метку
@@ -331,3 +332,106 @@ addressInput.value = calculateInactiveMainPinCoordinats();
 
 disablefields(true, inputs);
 disablefields(true, selects);
+
+
+// Личный проект: доверяй, но проверяй
+
+
+var roomNumberField = document.querySelector('#room_number');
+var capacityField = document.querySelector('#capacity');
+var typeField = document.querySelector('#type');
+var priceField = document.querySelector('#price');
+var timeInField = document.querySelector('#timein');
+var timeOutField = document.querySelector('#timeout');
+
+
+// Функция ограничения допустимых значений поля «Количество мест»
+var changeCapacityField = function () {
+  if (roomNumberField.value === '1') {
+    capacityField.querySelector('option[value="1"]').disabled = false;
+    capacityField.querySelector('option[value="2"]').disabled = true;
+    capacityField.querySelector('option[value="3"]').disabled = true;
+    capacityField.querySelector('option[value="0"]').disabled = true;
+    capacityField.querySelector('option[value="1"]').selected = true;
+  } else if (roomNumberField.value === '2') {
+    capacityField.querySelector('option[value="1"]').disabled = false;
+    capacityField.querySelector('option[value="2"]').disabled = false;
+    capacityField.querySelector('option[value="3"]').disabled = true;
+    capacityField.querySelector('option[value="0"]').disabled = true;
+    capacityField.querySelector('option[value="1"]').selected = true;
+  } else if (roomNumberField.value === '3') {
+    capacityField.querySelector('option[value="1"]').disabled = false;
+    capacityField.querySelector('option[value="2"]').disabled = false;
+    capacityField.querySelector('option[value="3"]').disabled = false;
+    capacityField.querySelector('option[value="0"]').disabled = true;
+    capacityField.querySelector('option[value="1"]').selected = true;
+  } else if (roomNumberField.value === '100') {
+    capacityField.querySelector('option[value="1"]').disabled = true;
+    capacityField.querySelector('option[value="2"]').disabled = true;
+    capacityField.querySelector('option[value="3"]').disabled = true;
+    capacityField.querySelector('option[value="0"]').disabled = false;
+    capacityField.querySelector('option[value="0"]').selected = true;
+  }
+};
+
+// Функции ограничения допустимых значений полей «Время заезда» и «Время выезда»
+var changeTimeOutField = function () {
+  if (timeInField.value === '12:00') {
+    timeOutField.querySelector('option[value="12:00"]').disabled = false;
+    timeOutField.querySelector('option[value="13:00"]').disabled = true;
+    timeOutField.querySelector('option[value="14:00"]').disabled = true;
+    timeOutField.querySelector('option[value="12:00"]').selected = true;
+  } else if (timeInField.value === '13:00') {
+    timeOutField.querySelector('option[value="12:00"]').disabled = true;
+    timeOutField.querySelector('option[value="13:00"]').disabled = false;
+    timeOutField.querySelector('option[value="14:00"]').disabled = true;
+    timeOutField.querySelector('option[value="13:00"]').selected = true;
+  } else if (timeInField.value === '14:00') {
+    timeOutField.querySelector('option[value="12:00"]').disabled = true;
+    timeOutField.querySelector('option[value="13:00"]').disabled = true;
+    timeOutField.querySelector('option[value="14:00"]').disabled = false;
+    timeOutField.querySelector('option[value="14:00"]').selected = true;
+  }
+};
+
+
+var changeTimeInField = function () {
+  if (timeOutField.value === '12:00') {
+    timeInField.querySelector('option[value="12:00"]').disabled = false;
+    timeInField.querySelector('option[value="13:00"]').disabled = true;
+    timeInField.querySelector('option[value="14:00"]').disabled = true;
+    timeInField.querySelector('option[value="12:00"]').selected = true;
+  } else if (timeOutField.value === '13:00') {
+    timeInField.querySelector('option[value="12:00"]').disabled = true;
+    timeInField.querySelector('option[value="13:00"]').disabled = false;
+    timeInField.querySelector('option[value="14:00"]').disabled = true;
+    timeInField.querySelector('option[value="13:00"]').selected = true;
+  } else if (timeOutField.value === '14:00') {
+    timeInField.querySelector('option[value="12:00"]').disabled = true;
+    timeInField.querySelector('option[value="13:00"]').disabled = true;
+    timeInField.querySelector('option[value="14:00"]').disabled = false;
+    timeInField.querySelector('option[value="14:00"]').selected = true;
+  }
+};
+
+// Функция ограничения минимального значение поля «Цена за ночь»
+var changeMinPrice = function () {
+  if (typeField.value === 'bungalo') {
+    priceField.min = 0;
+    priceField.placeholder = 0;
+  } else if (typeField.value === 'flat') {
+    priceField.min = 1000;
+    priceField.placeholder = 1000;
+  } else if (typeField.value === 'house') {
+    priceField.min = 5000;
+    priceField.placeholder = 5000;
+  } else if (typeField.value === 'palace') {
+    priceField.min = 10000;
+    priceField.placeholder = 10000;
+  }
+};
+
+roomNumberField.addEventListener('change', changeCapacityField);
+timeOutField.addEventListener('change', changeTimeInField);
+timeInField.addEventListener('change', changeTimeOutField);
+typeField.addEventListener('change', changeMinPrice);
