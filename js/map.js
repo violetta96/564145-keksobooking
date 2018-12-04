@@ -16,10 +16,10 @@ var ROOMS = {
   max: 5
 };
 
-var LOCATION = {
+var LOCATION_PIN = {
   x: {
     min: 200,
-    max: 800
+    max: 900
   },
   y: {
     min: 130,
@@ -164,7 +164,7 @@ var generateCards = function () {
       },
       offer: {
         title: getRandomNumber(TITLE),
-        address: getRandomInt(LOCATION.x) + ',' + ' ' + getRandomInt(LOCATION.y),
+        address: getRandomInt(LOCATION_PIN.x) + ',' + ' ' + getRandomInt(LOCATION_PIN.y),
         price: getRandomInt(PRICE),
         type: getRandomNumber(TYPE),
         rooms: getRandomInt(ROOMS),
@@ -180,8 +180,8 @@ var generateCards = function () {
         ],
       },
       location: {
-        x: getRandomInt(LOCATION.x),
-        y: getRandomInt(LOCATION.y),
+        x: getRandomInt(LOCATION_PIN.x),
+        y: getRandomInt(LOCATION_PIN.y),
       },
     });
   }
@@ -251,8 +251,6 @@ var selects = document.querySelectorAll('select');
 var inputs = document.querySelectorAll('input');
 var mapPinMain = document.querySelector('.map__pin--main');
 var addressInput = document.getElementById('address');
-var mapPinMainStyleLeft = mapPinMain.style.left.slice(0, 3);
-var mapPinMainStyleTop = mapPinMain.style.top.slice(0, 3);
 
 // добавляем неактивное состояние полям
 var disablefields = function (isdisabled, fields) {
@@ -270,28 +268,6 @@ var activeState = function () {
   renderMapPin();
   onPinClick();
 };
-
-// Функция для расчета координат адреса в активном состоянии страницы
-var calculateActiveMainPinCoordinats = function () {
-  return (+(mapPinMainStyleLeft) + (MAIN_PIN_WIDTH / 2)) + ', ' + (+(mapPinMainStyleTop) + MAIN_PIN_HEIGHT);
-};
-
-// Функция для расчета координат адреса в неактивном состоянии страницы
-var calculateInactiveMainPinCoordinats = function () {
-  return (+(mapPinMainStyleLeft) + (MAIN_PIN_WIDTH / 2)) + ', ' + (+(mapPinMainStyleTop) + (MAIN_PIN_HEIGHT / 2));
-};
-
-// Функция для заполнения поля адреса в активном состоянии страницы
-var setActiveAddressInput = function () {
-  addressInput.value = calculateActiveMainPinCoordinats();
-  addressInput.readOnly = true;
-};
-
-// добавление обработчика событий(отпускание элемента) на главную метку
-mapPinMain.addEventListener('mouseup', function () {
-  activeState();
-  setActiveAddressInput();
-});
 
 // Функция для добавления обработчиков событий вызывающих показ карточки
 var onPinClick = function () {
@@ -328,8 +304,6 @@ var openCard = function (evt) {
   document.addEventListener('keydown', onPopupEscPress);
 };
 
-addressInput.value = calculateInactiveMainPinCoordinats();
-
 disablefields(true, inputs);
 disablefields(true, selects);
 
@@ -339,6 +313,7 @@ disablefields(true, selects);
 
 var roomNumberField = document.querySelector('#room_number');
 var capacityField = document.querySelector('#capacity');
+var capacityFieldOptions = capacityField.querySelectorAll('option');
 var typeField = document.querySelector('#type');
 var priceField = document.querySelector('#price');
 var timeInField = document.querySelector('#timein');
@@ -347,70 +322,76 @@ var timeOutField = document.querySelector('#timeout');
 
 // Функция ограничения допустимых значений поля «Количество мест»
 var changeCapacityField = function () {
-  if (roomNumberField.value === '1') {
-    capacityField.querySelector('option[value="1"]').disabled = false;
-    capacityField.querySelector('option[value="2"]').disabled = true;
-    capacityField.querySelector('option[value="3"]').disabled = true;
-    capacityField.querySelector('option[value="0"]').disabled = true;
-    capacityField.querySelector('option[value="1"]').selected = true;
-  } else if (roomNumberField.value === '2') {
-    capacityField.querySelector('option[value="1"]').disabled = false;
-    capacityField.querySelector('option[value="2"]').disabled = false;
-    capacityField.querySelector('option[value="3"]').disabled = true;
-    capacityField.querySelector('option[value="0"]').disabled = true;
-    capacityField.querySelector('option[value="1"]').selected = true;
-  } else if (roomNumberField.value === '3') {
-    capacityField.querySelector('option[value="1"]').disabled = false;
-    capacityField.querySelector('option[value="2"]').disabled = false;
-    capacityField.querySelector('option[value="3"]').disabled = false;
-    capacityField.querySelector('option[value="0"]').disabled = true;
-    capacityField.querySelector('option[value="1"]').selected = true;
-  } else if (roomNumberField.value === '100') {
-    capacityField.querySelector('option[value="1"]').disabled = true;
-    capacityField.querySelector('option[value="2"]').disabled = true;
-    capacityField.querySelector('option[value="3"]').disabled = true;
-    capacityField.querySelector('option[value="0"]').disabled = false;
-    capacityField.querySelector('option[value="0"]').selected = true;
+  disablefields(true, capacityFieldOptions);
+  switch (true) {
+    case (roomNumberField.value === '1'): {
+      capacityField.querySelector('option[value="1"]').disabled = false;
+      capacityField.querySelector('option[value="1"]').selected = true;
+      break;
+    }
+    case (roomNumberField.value === '2'): {
+      capacityField.querySelector('option[value="1"]').disabled = false;
+      capacityField.querySelector('option[value="2"]').disabled = false;
+      capacityField.querySelector('option[value="1"]').selected = true;
+      break;
+    }
+    case (roomNumberField.value === '3'): {
+      capacityField.querySelector('option[value="1"]').disabled = false;
+      capacityField.querySelector('option[value="2"]').disabled = false;
+      capacityField.querySelector('option[value="3"]').disabled = false;
+      capacityField.querySelector('option[value="1"]').selected = true;
+      break;
+    }
+    case (roomNumberField.value === '100'): {
+      capacityField.querySelector('option[value="0"]').disabled = false;
+      capacityField.querySelector('option[value="0"]').selected = true;
+      break;
+    }
+    default: {
+      break;
+    }
   }
 };
 
-// Функции ограничения допустимых значений полей «Время заезда» и «Время выезда»
-var changeTimeOutField = function () {
-  if (timeInField.value === '12:00') {
-    timeOutField.querySelector('option[value="12:00"]').disabled = false;
-    timeOutField.querySelector('option[value="13:00"]').disabled = true;
-    timeOutField.querySelector('option[value="14:00"]').disabled = true;
-    timeOutField.querySelector('option[value="12:00"]').selected = true;
-  } else if (timeInField.value === '13:00') {
-    timeOutField.querySelector('option[value="12:00"]').disabled = true;
-    timeOutField.querySelector('option[value="13:00"]').disabled = false;
-    timeOutField.querySelector('option[value="14:00"]').disabled = true;
-    timeOutField.querySelector('option[value="13:00"]').selected = true;
-  } else if (timeInField.value === '14:00') {
-    timeOutField.querySelector('option[value="12:00"]').disabled = true;
-    timeOutField.querySelector('option[value="13:00"]').disabled = true;
-    timeOutField.querySelector('option[value="14:00"]').disabled = false;
-    timeOutField.querySelector('option[value="14:00"]').selected = true;
-  }
-};
-
-
+// Функция ограничения допустимых значений поля «Время заезда»
 var changeTimeInField = function () {
-  if (timeOutField.value === '12:00') {
-    timeInField.querySelector('option[value="12:00"]').disabled = false;
-    timeInField.querySelector('option[value="13:00"]').disabled = true;
-    timeInField.querySelector('option[value="14:00"]').disabled = true;
-    timeInField.querySelector('option[value="12:00"]').selected = true;
-  } else if (timeOutField.value === '13:00') {
-    timeInField.querySelector('option[value="12:00"]').disabled = true;
-    timeInField.querySelector('option[value="13:00"]').disabled = false;
-    timeInField.querySelector('option[value="14:00"]').disabled = true;
-    timeInField.querySelector('option[value="13:00"]').selected = true;
-  } else if (timeOutField.value === '14:00') {
-    timeInField.querySelector('option[value="12:00"]').disabled = true;
-    timeInField.querySelector('option[value="13:00"]').disabled = true;
-    timeInField.querySelector('option[value="14:00"]').disabled = false;
-    timeInField.querySelector('option[value="14:00"]').selected = true;
+  switch (true) {
+    case (timeOutField.value === '12:00'): {
+      timeInField.value = '12:00';
+      break;
+    }
+    case (timeOutField.value === '13:00'): {
+      timeInField.value = '13:00';
+      break;
+    }
+    case (timeOutField.value === '14:00'): {
+      timeInField.value = '14:00';
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+};
+
+// Функция ограничения допустимых значений поля «Время выезда»
+var changeTimeOutField = function () {
+  switch (true) {
+    case (timeInField.value === '12:00'): {
+      timeOutField.value = '12:00';
+      break;
+    }
+    case (timeInField.value === '13:00'): {
+      timeOutField.value = '13:00';
+      break;
+    }
+    case (timeInField.value === '14:00'): {
+      timeOutField.value = '14:00';
+      break;
+    }
+    default: {
+      break;
+    }
   }
 };
 
@@ -435,3 +416,101 @@ roomNumberField.addEventListener('change', changeCapacityField);
 timeOutField.addEventListener('change', changeTimeInField);
 timeInField.addEventListener('change', changeTimeOutField);
 typeField.addEventListener('change', changeMinPrice);
+
+
+// Личный проект: максимум подвижности
+
+var topLimit = LOCATION_PIN.y.min - MAIN_PIN_HEIGHT;
+var bottomLimit = LOCATION_PIN.y.max - MAIN_PIN_HEIGHT;
+var leftLimit = LOCATION_PIN.x.min + (MAIN_PIN_WIDTH / 2);
+var rightLimit = LOCATION_PIN.x.max - (MAIN_PIN_WIDTH / 2);
+
+// добавление обработчика событий на главную метку
+mapPinMain.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  activeState();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    switch (true) {
+      case ((mapPinMain.offsetTop - shift.y) < topLimit):
+        mapPinMain.style.top = topLimit + 'px';
+        break;
+      case ((mapPinMain.offsetTop - shift.y) > bottomLimit) :
+        mapPinMain.style.top = bottomLimit + 'px';
+        break;
+      default:
+        mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+        break;
+    }
+
+    switch (true) {
+      case ((mapPinMain.offsetLeft - shift.x) < leftLimit):
+        mapPinMain.style.left = leftLimit + 'px';
+        break;
+      case ((mapPinMain.offsetLeft - shift.x) > rightLimit) :
+        mapPinMain.style.left = rightLimit + 'px';
+        break;
+      default:
+        mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+        break;
+    }
+    setActiveAddressInput();
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    mapPinMain.addEventListener('click', setActiveAddressInput);
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (dragged) {
+      var onClickPreventDefault = function () {
+        mapPinMain.removeEventListener('click', onClickPreventDefault);
+      };
+      mapPinMain.addEventListener('click', onClickPreventDefault);
+    }
+
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
+// Функция для расчета координат адреса в активном состоянии страницы
+var calculateActiveMainPinCoordinats = function () {
+  return (mapPinMain.offsetLeft + (MAIN_PIN_WIDTH / 2)) + ', ' + (mapPinMain.offsetTop + MAIN_PIN_HEIGHT);
+};
+
+// Функция для расчета координат адреса в неактивном состоянии страницы
+var calculateInactiveMainPinCoordinats = function () {
+  return (mapPinMain.offsetLeft + (MAIN_PIN_WIDTH / 2)) + ', ' + (mapPinMain.offsetLeft + (MAIN_PIN_HEIGHT / 2));
+};
+
+// Функция для заполнения поля адреса в активном состоянии страницы
+var setActiveAddressInput = function () {
+  addressInput.value = calculateActiveMainPinCoordinats();
+  addressInput.readOnly = true;
+};
+
+addressInput.value = calculateInactiveMainPinCoordinats();
