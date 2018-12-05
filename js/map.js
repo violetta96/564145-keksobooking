@@ -201,7 +201,7 @@ var calculatePinCoordinatY = function (coordinate, height) {
 // функция для создания меток
 var createMapPin = function (pin, index) {
   var pinOfferElement = pinOfferTemplate.cloneNode(true);
-  pinOfferElement.style = 'left: ' + calculatePinCoordinatX(pin.location.x, PIN_WIDTH) + 'px; ' + 'top: ' + calculatePinCoordinatY(pin.location.y, PIN_HEIGHT) + 'px;';
+  pinOfferElement.style = 'left: ' + calculatePinCoordinatX(pin.location.x, PIN_WIDTH) + 'px; ' + 'top: ' + calculatePinCoordinatY(pin.location.y - PIN_HEIGHT, PIN_HEIGHT) + 'px;';
   pinOfferElement.querySelector('img').src = pin.author.avatar;
   pinOfferElement.querySelector('img').alt = pin.offer.title;
   pinOfferElement.setAttribute('data-index', index);
@@ -433,9 +433,9 @@ typeField.addEventListener('change', changeMinPrice);
 // Личный проект: максимум подвижности
 
 var topLimit = LOCATION_PIN.y.min;
-var bottomLimit = LOCATION_PIN.y.max;
+var bottomLimit = LOCATION_PIN.y.max - MAIN_PIN_HEIGHT;
 var leftLimit = LOCATION_PIN.x.min;
-var rightLimit = LOCATION_PIN.x.max;
+var rightLimit = LOCATION_PIN.x.max - MAIN_PIN_WIDTH / 2;
 
 // добавление обработчика событий на главную метку
 mapPinMain.addEventListener('mousedown', function (evt) {
