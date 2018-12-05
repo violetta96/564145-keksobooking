@@ -106,17 +106,17 @@ var generateRandomFeatures = function (FeaturesArr) {
 
 // функция для задания типа жилья
 var setType = function (element, card) {
-  switch (true) {
-    case (card.type === 'flat'):
+  switch (card.type) {
+    case 'flat':
       element.querySelector('.popup__type').textContent = 'Квартира';
       break;
-    case (card.type === 'bungalo') :
+    case 'bungalo' :
       element.querySelector('.popup__type').textContent = 'Бунгало';
       break;
-    case (card.type === 'house') :
+    case 'house' :
       element.querySelector('.popup__type').textContent = 'Дом';
       break;
-    case (card.type === 'palace') :
+    case 'palace' :
       element.querySelector('.popup__type').textContent = 'Дворец';
       break;
     default:
@@ -189,12 +189,12 @@ var generateCards = function () {
 generateCards();
 
 var calculatePinCoordinatX = function (coordinate, width) {
-  var locationX = coordinate - width / 2;
+  var locationX = coordinate + width / 2;
   return locationX;
 };
 
 var calculatePinCoordinatY = function (coordinate, height) {
-  var locationY = coordinate - height;
+  var locationY = coordinate + height;
   return locationY;
 };
 
@@ -323,26 +323,26 @@ var timeOutField = document.querySelector('#timeout');
 // Функция ограничения допустимых значений поля «Количество мест»
 var changeCapacityField = function () {
   disablefields(true, capacityFieldOptions);
-  switch (true) {
-    case (roomNumberField.value === '1'): {
+  switch (roomNumberField.value) {
+    case '1': {
       capacityField.querySelector('option[value="1"]').disabled = false;
       capacityField.querySelector('option[value="1"]').selected = true;
       break;
     }
-    case (roomNumberField.value === '2'): {
+    case '2': {
       capacityField.querySelector('option[value="1"]').disabled = false;
       capacityField.querySelector('option[value="2"]').disabled = false;
       capacityField.querySelector('option[value="1"]').selected = true;
       break;
     }
-    case (roomNumberField.value === '3'): {
+    case '3': {
       capacityField.querySelector('option[value="1"]').disabled = false;
       capacityField.querySelector('option[value="2"]').disabled = false;
       capacityField.querySelector('option[value="3"]').disabled = false;
       capacityField.querySelector('option[value="1"]').selected = true;
       break;
     }
-    case (roomNumberField.value === '100'): {
+    case '100': {
       capacityField.querySelector('option[value="0"]').disabled = false;
       capacityField.querySelector('option[value="0"]').selected = true;
       break;
@@ -355,16 +355,16 @@ var changeCapacityField = function () {
 
 // Функция ограничения допустимых значений поля «Время заезда»
 var changeTimeInField = function () {
-  switch (true) {
-    case (timeOutField.value === '12:00'): {
+  switch (timeOutField.value) {
+    case '12:00': {
       timeInField.value = '12:00';
       break;
     }
-    case (timeOutField.value === '13:00'): {
+    case '13:00': {
       timeInField.value = '13:00';
       break;
     }
-    case (timeOutField.value === '14:00'): {
+    case '14:00': {
       timeInField.value = '14:00';
       break;
     }
@@ -376,16 +376,16 @@ var changeTimeInField = function () {
 
 // Функция ограничения допустимых значений поля «Время выезда»
 var changeTimeOutField = function () {
-  switch (true) {
-    case (timeInField.value === '12:00'): {
+  switch (timeInField.value) {
+    case '12:00': {
       timeOutField.value = '12:00';
       break;
     }
-    case (timeInField.value === '13:00'): {
+    case '13:00': {
       timeOutField.value = '13:00';
       break;
     }
-    case (timeInField.value === '14:00'): {
+    case '14:00': {
       timeOutField.value = '14:00';
       break;
     }
@@ -397,18 +397,30 @@ var changeTimeOutField = function () {
 
 // Функция ограничения минимального значение поля «Цена за ночь»
 var changeMinPrice = function () {
-  if (typeField.value === 'bungalo') {
-    priceField.min = 0;
-    priceField.placeholder = 0;
-  } else if (typeField.value === 'flat') {
-    priceField.min = 1000;
-    priceField.placeholder = 1000;
-  } else if (typeField.value === 'house') {
-    priceField.min = 5000;
-    priceField.placeholder = 5000;
-  } else if (typeField.value === 'palace') {
-    priceField.min = 10000;
-    priceField.placeholder = 10000;
+  switch (typeField.value) {
+    case 'bungalo': {
+      priceField.min = 0;
+      priceField.placeholder = 0;
+      break;
+    }
+    case 'flat': {
+      priceField.min = 1000;
+      priceField.placeholder = 1000;
+      break;
+    }
+    case 'house': {
+      priceField.min = 5000;
+      priceField.placeholder = 5000;
+      break;
+    }
+    case 'palace': {
+      priceField.min = 10000;
+      priceField.placeholder = 10000;
+      break;
+    }
+    default: {
+      break;
+    }
   }
 };
 
@@ -420,10 +432,10 @@ typeField.addEventListener('change', changeMinPrice);
 
 // Личный проект: максимум подвижности
 
-var topLimit = LOCATION_PIN.y.min - MAIN_PIN_HEIGHT;
-var bottomLimit = LOCATION_PIN.y.max - MAIN_PIN_HEIGHT;
-var leftLimit = LOCATION_PIN.x.min + (MAIN_PIN_WIDTH / 2);
-var rightLimit = LOCATION_PIN.x.max - (MAIN_PIN_WIDTH / 2);
+var topLimit = LOCATION_PIN.y.min;
+var bottomLimit = LOCATION_PIN.y.max;
+var leftLimit = LOCATION_PIN.x.min;
+var rightLimit = LOCATION_PIN.x.max;
 
 // добавление обработчика событий на главную метку
 mapPinMain.addEventListener('mousedown', function (evt) {
