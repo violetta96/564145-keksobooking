@@ -2,76 +2,58 @@
 
 (function () {
   var map = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
+  var mapPin = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
-  var adForm = document.querySelector('.ad-form');
-  var selects = document.querySelectorAll('select');
-  var inputs = document.querySelectorAll('input');
   var mapPinMain = document.querySelector('.map__pin--main');
   var addressInput = document.getElementById('address');
+  var adFormReset = document.querySelector('.ad-form__reset');
 
-  // функция для отрисовки меток на карте
-  var renderMapPin = function () {
-    for (var i = 0; i < window.data.newCardsQuantity; i++) {
-      fragment.appendChild(window.pin.createMapPin(window.data.newCards[i], i));
+  // функция отрисовки меток
+  var renderPins = function (amount) {
+    for (var i = 0; i < amount.length; i++) {
+      fragment.appendChild(window.pin.createMapPin(amount[i], i));
     }
-    mapPins.appendChild(fragment);
+    mapPin.appendChild(fragment);
+  };
+
+  // функция отрисовки карточек
+  var renderCards = function (responce) {
+    var newCardo = window.card.createCard(responce);
+    map.insertBefore(newCardo, map.querySelector('.map__filters-container'));
+    document.querySelector('.popup__close').addEventListener('click', closePopup);
+    document.addEventListener('keydown', window.onPopupEscPress);
   };
 
 
-  // функция для отрисовки карточек
-  var renderMapCards = function (i) {
-    fragment.appendChild(window.card.createCard(window.data.newCards[i]));
-    map.insertBefore(fragment, map.querySelector('.map__filters-container'));
+  // функция для отрисовки меток на карте
+  var onLoad = function (responce) {
+    renderPins(responce);
+  };
+
+  // функция ошибки
+  var onError = function () {
+    var errorElement = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+    document.querySelector('main').appendChild(errorElement);
   };
 
   // функция активирования страницы
   var activeState = function () {
     map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    window.disablefields(false, inputs);
-    window.disablefields(false, selects);
-    renderMapPin();
-    onPinClick();
+    window.form.adForm.classList.remove('ad-form--disabled');
+    window.disableFieldsCheck(false);
+    window.backend.load(onLoad, onError);
   };
 
-  // Функция для добавления обработчиков событий вызывающих показ карточки
-  var onPinClick = function () {
-    var mapPin = document.querySelectorAll('.map__pin');
-    for (var i = 1; i < mapPin.length; i++) {
-      mapPin[i].addEventListener('click', openCard);
-    }
-  };
-
-  // Функция закрытия попапа нажатием ESC
-  var onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.data.escKeyCode) {
-      closePopup();
-    }
-  };
-
-  // Функция закрытия попапа нажатием кнопки
+  // функция закрытия попапа
   var closePopup = function () {
-    document.querySelector('.map__card').remove();
-    document.removeEventListener('keydown', onPopupEscPress);
-  };
-
-  // Функция открытия карточки при клике
-  var openCard = function (evt) {
-    var dataIndex = evt.currentTarget.getAttribute('data-index');
-
-    if (dataIndex) {
-      renderMapCards(dataIndex);
+    var oldCard = map.querySelector('.map__card');
+    if (!oldCard) {
+      document.removeEventListener('keydown', window.onPopupEscPress);
+      document.querySelector('.popup__close').removeEventListener('click', closePopup);
+      document.querySelector('.map__pin--active').classList.remove('map__pin--active');
+      map.removeChild(oldCard);
     }
-
-    var closePopupButton = document.querySelector('.popup__close');
-
-    closePopupButton.addEventListener('click', closePopup);
-    document.addEventListener('keydown', onPopupEscPress);
   };
-
-  window.disablefields(true, inputs);
-  window.disablefields(true, selects);
 
   // добавление обработчика событий на главную метку
   mapPinMain.addEventListener('mousedown', function (evt) {
@@ -145,22 +127,74 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  // Функция для расчета координат адреса в активном состоянии страницы
+  // функция для расчета координат адреса в активном состоянии страницы
   var calculateActiveMainPinCoordinats = function () {
     return (mapPinMain.offsetLeft + (window.data.mainPinWidth / 2)) + ', ' + (mapPinMain.offsetTop + window.data.mainPinHeight);
   };
 
-  // Функция для расчета координат адреса в неактивном состоянии страницы
+  // функция для расчета координат адреса в неактивном состоянии страницы
   var calculateInactiveMainPinCoordinats = function () {
-    return (mapPinMain.offsetLeft + (window.data.mainPinWidth / 2)) + ', ' + (mapPinMain.offsetLeft + (window.data.mainPinHeight / 2));
+    return (mapPinMain.offsetLeft + (window.data.mainPinWidth / 2)) + ', ' + (mapPinMain.offsetTop + (window.data.mainPinHeight / 2));
   };
 
-  // Функция для заполнения поля адреса в активном состоянии страницы
+  // функция для заполнения поля адреса в активном состоянии страницы
   var setActiveAddressInput = function () {
-    addressInput.value = calculateActiveMainPinCoordinats();
+    document.getElementById('address').value = calculateActiveMainPinCoordinats();
+    document.getElementById('address').readOnly = true;
+  };
+
+  // функция для возвращения поля адресса в исходное положение
+  var setDisabledAddressField = function () {
+    addressInput.placeholder = calculateInactiveMainPinCoordinats();
+    addressInput.value = calculateInactiveMainPinCoordinats();
     addressInput.readOnly = true;
   };
 
+  // функция для возвращения главной метки в исходное положение
+  var resetPinMain = function () {
+    mapPinMain.style.left = '570px';
+    mapPinMain.style.top = '375px';
+    setDisabledAddressField();
+  };
+
+  // функция для удаления меток с карты
+  var removeMapPins = function () {
+    var mapPins = document.querySelectorAll('.map__pin');
+    for (var i = 0; i < mapPins.length; i++) {
+      if (!mapPins[i].classList.contains('map__pin--main')) {
+        mapPin.removeChild(mapPins[i]);
+      }
+    }
+  };
+
+  // функция для удаления открытой капточки
+  var removeMapCard = function () {
+    var activeCard = document.querySelector('.map__card');
+    if (activeCard) {
+      activeCard.remove();
+    }
+  };
+
+  // функция для сбрасывания страницы в исходное состояние
+  var resetPage = function () {
+    resetPinMain();
+    removeMapPins();
+    removeMapCard();
+    map.classList.add('map--faded');
+    window.form.adForm.classList.add('ad-form--disabled');
+    window.form.resetForm();
+  };
+
+  // добавление обработчика событий на кнопку сбрасывания страницы в исходное состояние
+  adFormReset.addEventListener('click', resetPage);
+
+  window.disableFieldsCheck(true);
+
   addressInput.value = calculateInactiveMainPinCoordinats();
 
+  window.map = {
+    resetPage: resetPage,
+    renderCards: renderCards,
+    closePopup: closePopup,
+  };
 })();

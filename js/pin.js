@@ -21,11 +21,16 @@
     pinOfferElement.querySelector('img').src = pin.author.avatar;
     pinOfferElement.querySelector('img').alt = pin.offer.title;
     pinOfferElement.setAttribute('data-index', index);
+    pinOfferElement.addEventListener('click', function () {
+      window.map.renderCards(pin);
+      window.map.closePopup();
+      pinOfferElement.classList.add('map__pin--active');
+    });
     return pinOfferElement;
   };
 
   window.pin = {
-    createMapPin: createMapPin,
+    createMapPin: createMapPin
   };
 
 })();
