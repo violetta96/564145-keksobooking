@@ -9,9 +9,9 @@
   var adFormReset = document.querySelector('.ad-form__reset');
 
   // функция отрисовки меток
-  var renderPins = function (amount) {
-    for (var i = 0; i < amount.length; i++) {
-      fragment.appendChild(window.pin.createMapPin(amount[i], i));
+  var renderPins = function (responce) {
+    for (var i = 0; i < responce.length; i++) {
+      fragment.appendChild(window.pin.createMapPin(responce[i], i));
     }
     mapPin.appendChild(fragment);
   };
@@ -31,8 +31,9 @@
   };
 
   // функция ошибки
-  var onError = function () {
+  var onError = function (responce) {
     var errorElement = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
+    errorElement.querySelector('.error__message').textContent = responce;
     document.querySelector('main').appendChild(errorElement);
   };
 
@@ -47,7 +48,7 @@
   // функция закрытия попапа
   var closePopup = function () {
     var oldCard = map.querySelector('.map__card');
-    if (!oldCard) {
+    if (oldCard) {
       document.removeEventListener('keydown', window.onPopupEscPress);
       document.querySelector('.popup__close').removeEventListener('click', closePopup);
       document.querySelector('.map__pin--active').classList.remove('map__pin--active');

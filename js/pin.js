@@ -5,7 +5,7 @@
 
   // функции для расчета координат меток
   var calculatePinCoordinatX = function (coordinate, width) {
-    var locationX = coordinate + width / 2;
+    var locationX = coordinate - width / 2;
     return locationX;
   };
 
@@ -22,8 +22,8 @@
     pinOfferElement.querySelector('img').alt = pin.offer.title;
     pinOfferElement.setAttribute('data-index', index);
     pinOfferElement.addEventListener('click', function () {
-      window.map.renderCards(pin);
       window.map.closePopup();
+      window.map.renderCards(pin);
       pinOfferElement.classList.add('map__pin--active');
     });
     return pinOfferElement;
