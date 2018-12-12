@@ -15,17 +15,22 @@
   };
 
   // функция для создания меток
-  var createMapPin = function (pin, index) {
+  var createMapPin = function (pin) {
     var pinOfferElement = pinOfferTemplate.cloneNode(true);
-    pinOfferElement.style = 'left: ' + calculatePinCoordinatX(pin.location.x, window.data.pinWidth) + 'px; ' + 'top: ' + calculatePinCoordinatY(pin.location.y - window.data.pinHeight, window.data.pinHeight) + 'px;';
-    pinOfferElement.querySelector('img').src = pin.author.avatar;
-    pinOfferElement.querySelector('img').alt = pin.offer.title;
-    pinOfferElement.setAttribute('data-index', index);
+    if (pin.offer) {
+      pinOfferElement.style = 'left: ' + calculatePinCoordinatX(pin.location.x, window.data.pinWidth) + 'px; ' + 'top: ' + calculatePinCoordinatY(pin.location.y - window.data.pinHeight, window.data.pinHeight) + 'px;';
+      pinOfferElement.querySelector('img').src = pin.author.avatar;
+      pinOfferElement.querySelector('img').alt = pin.offer.title;
+    } else {
+      pinOfferElement.style.display = 'none';
+    }
+
     pinOfferElement.addEventListener('click', function () {
       window.map.closePopup();
       window.map.renderCards(pin);
       pinOfferElement.classList.add('map__pin--active');
     });
+
     return pinOfferElement;
   };
 

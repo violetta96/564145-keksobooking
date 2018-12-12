@@ -11,7 +11,7 @@
   // функция отрисовки меток
   var renderPins = function (responce) {
     for (var i = 0; i < responce.length; i++) {
-      fragment.appendChild(window.pin.createMapPin(responce[i], i));
+      fragment.appendChild(window.pin.createMapPin(responce[i]));
     }
     mapPin.appendChild(fragment);
   };
