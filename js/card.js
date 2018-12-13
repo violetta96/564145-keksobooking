@@ -68,7 +68,38 @@
     setFeatures(card.offer.features, offerElement);
     offerElement.querySelector('.popup__description').textContent = card.offer.description;
     offerElement.querySelector('.popup__photos').appendChild(createCardPhotos(card.offer.photos, offerElement));
+    hidePopupBlocks(card, offerElement);
     return offerElement;
+  };
+
+  var hidePopupBlocks = function (card, offerElement) {
+    if (!card.author.avatar) {
+      offerElement.querySelector('.popup__avatar').classList.add('hidden');
+    }
+    if (!card.offer.title) {
+      offerElement.querySelector('.popup__title').classList.add('hidden');
+    }
+    if (!card.offer.address) {
+      offerElement.querySelector('.popup__text--address').classList.add('hidden');
+    }
+    if (!card.offer.price) {
+      offerElement.querySelector('.popup__text--price').classList.add('hidden');
+    }
+    if (card.offer.checkin === '0:00' || card.offer.checkout === '0:00') {
+      offerElement.querySelector('.popup__text--time').classList.add('hidden');
+    }
+    if (card.offer.rooms === 0 || card.offer.guests === 0) {
+      offerElement.querySelector('.popup__text--capacity').classList.add('hidden');
+    }
+    if (card.offer.features.length === 0) {
+      offerElement.querySelector('.popup__features').classList.add('hidden');
+    }
+    if (card.offer.photos.length === 0) {
+      offerElement.querySelector('.popup__photos').classList.add('hidden');
+    }
+    if (!card.offer.description) {
+      offerElement.querySelector('.popup__description').classList.add('hidden');
+    }
   };
 
   window.card = {

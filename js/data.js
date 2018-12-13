@@ -6,10 +6,10 @@
   var PIN_HEIGHT = 70;
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 84;
-  var NEW_CARDS_QUANTITY = 8;
+  //  var NEW_CARDS_QUANTITY = 8;
 
 
-  var PRICE = {
+  /*  var PRICE = {
     min: 1000,
     max: 1000000
   };
@@ -17,17 +17,6 @@
   var ROOMS = {
     min: 1,
     max: 5
-  };
-
-  var LOCATION_PIN = {
-    x: {
-      min: 200,
-      max: 900
-    },
-    y: {
-      min: 130,
-      max: 630
-    }
   };
 
   var AVATARS = [
@@ -79,15 +68,21 @@
     'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
     'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
   ];
+  */
 
-  var newCards = [];
-  var topLimit = LOCATION_PIN.y.min;
-  var bottomLimit = LOCATION_PIN.y.max - MAIN_PIN_HEIGHT;
-  var leftLimit = LOCATION_PIN.x.min;
-  var rightLimit = LOCATION_PIN.x.max - MAIN_PIN_WIDTH / 2;
+  /*  var LOCATION_PIN = {
+    x: {
+      min: 200,
+      max: 900
+    },
+    y: {
+      min: 130,
+      max: 630
+    }
+  };
 
   // функция для генерирования случайного числа
-  var getRandomNumber = function (rand) {
+  /*  var getRandomNumber = function (rand) {
     return rand[Math.floor(Math.random() * rand.length)];
   };
 
@@ -105,9 +100,9 @@
     }
     return randomFeaturesArr;
   };
-
+*/
   // функция для наполнения массива карточками
-  var generateCards = function () {
+  /*  var generateCards = function () {
     for (var i = 0; i < NEW_CARDS_QUANTITY; i++) {
       newCards.push({
         author: {
@@ -138,18 +133,21 @@
     }
   };
   generateCards();
-
+  */
+  var topLimit = 130;
+  var bottomLimit = 630 - MAIN_PIN_HEIGHT;
+  var leftLimit = 200;
+  var rightLimit = 900 - MAIN_PIN_WIDTH / 2;
   window.data = {
     escKeyCode: ESC_KEYCODE,
     pinWidth: PIN_WIDTH,
     pinHeight: PIN_HEIGHT,
     mainPinWidth: MAIN_PIN_WIDTH,
     mainPinHeight: MAIN_PIN_HEIGHT,
-    newCards: newCards,
     topLimit: topLimit,
     bottomLimit: bottomLimit,
     leftLimit: leftLimit,
     rightLimit: rightLimit,
-    newCardsQuantity: NEW_CARDS_QUANTITY
+  //  newCardsQuantity: NEW_CARDS_QUANTITY
   };
 })();
