@@ -1,16 +1,18 @@
 'use strict';
 
 (function () {
+  var MAX_PINS = 5;
+
   var map = document.querySelector('.map');
   var mapPin = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   var mapPinMain = document.querySelector('.map__pin--main');
   var addressInput = document.getElementById('address');
   var adFormReset = document.querySelector('.ad-form__reset');
-
+  var filterArray;
   // функция отрисовки меток
   var renderPins = function (responce) {
-    for (var i = 0; i < responce.length; i++) {
+    for (var i = 0; i < MAX_PINS; i++) {
       fragment.appendChild(window.pin.createMapPin(responce[i]));
     }
     mapPin.appendChild(fragment);
@@ -24,10 +26,16 @@
     document.addEventListener('keydown', window.onPopupEscPress);
   };
 
+  window.updateMapPins = function () {
+    var filteredPins = window.filterArray(filterArray);
+    removeMapPins();
+    renderPins(filteredPins);
+  };
 
   // функция для отрисовки меток на карте
   var onLoad = function (responce) {
     renderPins(responce);
+    filterArray = responce;
   };
 
   // функция ошибки
@@ -166,6 +174,7 @@
         mapPin.removeChild(mapPins[i]);
       }
     }
+    removeMapCard();
   };
 
   // функция для удаления открытой капточки
@@ -180,10 +189,10 @@
   var resetPage = function () {
     resetPinMain();
     removeMapPins();
-    removeMapCard();
     map.classList.add('map--faded');
     window.form.adForm.classList.add('ad-form--disabled');
     window.form.resetForm();
+    window.resetFilter();
   };
 
   // добавление обработчика событий на кнопку сбрасывания страницы в исходное состояние
