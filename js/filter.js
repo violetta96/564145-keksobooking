@@ -46,12 +46,11 @@
     return card.offer.type === housingType.value || housingType.value === RESET_VALUE;
   };
   var compareRooms = function (card) {
-    return card.offer.type === +housingRooms.value || housingRooms.value === RESET_VALUE;
+    return card.offer.rooms.toString() === housingRooms.value || housingRooms.value === RESET_VALUE;
   };
   var compareGuests = function (card) {
-    return card.offer.type === +housingGuests.value || housingGuests.value === RESET_VALUE;
+    return card.offer.guests.toString() === housingGuests.value || housingGuests.value === RESET_VALUE;
   };
-
   var comparePrice = function (card) {
     var isPriceMatch;
     switch (housingPrice.value) {

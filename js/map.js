@@ -10,9 +10,10 @@
   var addressInput = document.getElementById('address');
   var adFormReset = document.querySelector('.ad-form__reset');
   var filterArray;
+
   // функция отрисовки меток
   var renderPins = function (responce) {
-    for (var i = 0; i < MAX_PINS; i++) {
+    for (var i = 0; i < Math.min(responce.length, MAX_PINS); i++) {
       fragment.appendChild(window.pin.createMapPin(responce[i]));
     }
     mapPin.appendChild(fragment);
