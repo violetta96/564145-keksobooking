@@ -42,15 +42,13 @@
     return photosFragment;
   };
 
-
   // функция для задания характеристик
   var setFeatures = function (featuresArr, offerElement) {
-    var featuresList = offerElement.querySelector('.popup__features');
-    var featuresElements = offerElement.querySelectorAll('.popup__feature');
-    for (var i = 0; i < featuresArr.length; i++) {
-      if (!featuresElements[i].classList.contains(featuresArr[i])) {
-        featuresList.removeChild(featuresElements[i]);
-      }
+    offerElement.querySelector('.popup__features').innerHTML = '';
+    for (var j = 0; j < featuresArr.length; j++) {
+      var newElement = document.createElement('li');
+      newElement.className = 'popup__feature popup__feature--' + featuresArr[j];
+      offerElement.querySelector('.popup__features').appendChild(newElement);
     }
   };
 

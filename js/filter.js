@@ -71,16 +71,16 @@
   };
 
   var compareFeatures = function (card) {
-    var numberMatches = 0;
     var checkedFeatures = document.querySelectorAll('.map__checkbox:checked');
+    var machedFeatures = 0;
     for (var i = 0; i < checkedFeatures.length; i++) {
       for (var j = 0; j < card.offer.features.length; j++) {
         if (checkedFeatures[i].value === card.offer.features[j]) {
-          numberMatches++;
+          machedFeatures++;
         }
       }
     }
-    return numberMatches === checkedFeatures.length;
+    return machedFeatures === checkedFeatures.length;
   };
 
   window.filterArray = function (array) {
