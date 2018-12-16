@@ -38,8 +38,8 @@
   var uploadPhoto = function (fileChooser, preview, multiple) {
 
     var onChangeInput = function () {
-      var file = fileChooser.files.length;
-      for (var i = 0; i < file; i++) {
+      var file = fileChooser.files;
+      for (var i = 0; i < file.length; i++) {
         if (checkFileType(file[i], FILE_TYPES)) {
           var reader = new FileReader();
 
