@@ -14,7 +14,8 @@
   var housingGuests = document.querySelector('#housing-guests');
   var housingFeaturesAll = document.querySelectorAll('.map__checkbox');
 
-  window.resetFilter = function () {
+  // функция обновляющая фильтры
+  var resetFilter = function () {
     for (var i = 0; i < housingFeaturesAll.length; i++) {
       housingFeaturesAll[i].checked = false;
     }
@@ -26,10 +27,11 @@
   };
 
   var onFilterChange = window.debounce(function () {
-    window.updateMapPins();
+    window.main.updateMapPins();
   });
 
-  var addFilterChangeHandler = function () {
+  // функция добавляющая оброботчики событий на фильтры
+  var addFilterChange = function () {
     for (var i = 0; i < housingFeaturesAll.length; i++) {
       housingFeaturesAll[i].addEventListener('change', onFilterChange);
     }
@@ -40,17 +42,29 @@
     housingGuests.addEventListener('change', onFilterChange);
   };
 
-  addFilterChangeHandler();
+  var removeFilterChange = function () {
+    for (var i = 0; i < housingFeaturesAll.length; i++) {
+      housingFeaturesAll[i].removeEventListener('change', onFilterChange);
+    }
+
+    housingType.removeEventListener('change', onFilterChange);
+    housingPrice.removeEventListener('change', onFilterChange);
+    housingRooms.removeEventListener('change', onFilterChange);
+    housingGuests.removeEventListener('change', onFilterChange);
+  };
 
   var compareType = function (card) {
     return card.offer.type === housingType.value || housingType.value === RESET_VALUE;
   };
+
   var compareRooms = function (card) {
     return card.offer.rooms.toString() === housingRooms.value || housingRooms.value === RESET_VALUE;
   };
+
   var compareGuests = function (card) {
     return card.offer.guests.toString() === housingGuests.value || housingGuests.value === RESET_VALUE;
   };
+
   var comparePrice = function (card) {
     var isPriceMatch;
     switch (housingPrice.value) {
@@ -83,8 +97,8 @@
     return machedFeatures === checkedFeatures.length;
   };
 
+  // функция фильтрующая объявления
   window.filterArray = function (array) {
-
     var filteredArray = array
     .filter(function (card) {
       return compareType(card) && compareRooms(card) && compareGuests(card) && comparePrice(card) && compareFeatures(card);
@@ -95,5 +109,8 @@
 
   window.filter = {
     mapFilters: mapFilters,
+    resetFilter: resetFilter,
+    addFilterChange: addFilterChange,
+    removeFilterChange: removeFilterChange,
   };
 })();

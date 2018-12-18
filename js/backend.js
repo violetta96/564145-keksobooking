@@ -1,10 +1,10 @@
 'use strict';
 
 (function () {
-  var URL = 'https://js.dump.academy/keksobooking';
-  var DATA_URL = 'https://js.dump.academy/keksobooking/data';
   var STATUS_CODE = 200;
   var TIMEOUT = 10000;
+  var URL = 'https://js.dump.academy/keksobooking';
+  var DATA_URL = 'https://js.dump.academy/keksobooking/data';
 
   var load = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();

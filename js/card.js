@@ -70,6 +70,7 @@
     return offerElement;
   };
 
+  // функция скрывающая пустые блоки
   var hidePopupBlocks = function (card, offerElement) {
     if (!card.author.avatar) {
       offerElement.querySelector('.popup__avatar').classList.add('hidden');

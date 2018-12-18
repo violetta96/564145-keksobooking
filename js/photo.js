@@ -16,23 +16,32 @@
     });
   };
 
+  var createNewDiv = function () {
+    var newDiv = document.createElement('div');
+    newDiv.classList.add('ad-form__photo');
+    return newDiv;
+  };
+
   var onLoadAddFiles = function (reader) {
-    var newPhotoDiv = document.createElement('div');
-    newPhotoDiv.classList.add('ad-form__photo');
+    var newPhotoDiv = createNewDiv();
     var img = document.createElement('img');
     img.src = reader.result;
     img.alt = 'Фотография жилья';
     img.width = '70';
     img.height = '70';
     newPhotoDiv.appendChild(img);
-    previewPhotoContainer.appendChild(img);
+    previewPhotoContainer.appendChild(newPhotoDiv);
   };
 
-  var onLoadremoveFiles = function () {
+  var removeFiles = function () {
     var previewPhotoElements = previewPhotoContainer.querySelectorAll('.ad-form__photo');
     for (var i = 0; i < previewPhotoElements.length; i++) {
       previewPhotoContainer.removeChild(previewPhotoElements[i]);
     }
+  };
+
+  var removeAvatar = function () {
+    previewAvatar.src = 'img/muffin-grey.svg';
   };
 
   var uploadPhoto = function (fileChooser, preview, multiple) {
@@ -45,7 +54,6 @@
 
           reader.addEventListener('load', function () {
             if (multiple) {
-              onLoadremoveFiles();
               onLoadAddFiles(reader);
             } else {
               preview.src = reader.result;
@@ -56,10 +64,18 @@
         }
       }
     };
-
+    removeFiles();
     fileChooser.addEventListener('change', onChangeInput);
   };
 
   uploadPhoto(fileChooserAvatar, previewAvatar);
   uploadPhoto(fileChooserPhoto, previewPhoto, true);
+
+  window.photo = {
+    resetImages: function () {
+      removeFiles();
+      removeAvatar();
+      previewPhotoContainer.appendChild(createNewDiv());
+    }
+  };
 })();
