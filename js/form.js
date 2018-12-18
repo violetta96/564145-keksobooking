@@ -17,7 +17,7 @@
   var textarea = document.querySelectorAll('textarea');
 
   //   Функция ограничения допустимых значений поля «Количество мест»
-  var changeCapacityField = function () {
+  var onChangeCapacityField = function () {
     for (var i = 0; i < capacityFieldOptions.length; i++) {
       capacityFieldOptions[i].disabled = true;
     }
@@ -53,7 +53,7 @@
   };
 
   // Функция ограничения допустимых значений поля «Время заезда»
-  var changeTimeInField = function () {
+  var onChangeTimeInField = function () {
     switch (timeOutField.value) {
       case '12:00': {
         timeInField.value = '12:00';
@@ -74,7 +74,7 @@
   };
 
   // Функция ограничения допустимых значений поля «Время выезда»
-  var changeTimeOutField = function () {
+  var onChangeTimeOutField = function () {
     switch (timeInField.value) {
       case '12:00': {
         timeOutField.value = '12:00';
@@ -95,7 +95,7 @@
   };
 
   // Функция ограничения минимального значение поля «Цена за ночь»
-  var changeMinPrice = function () {
+  var onChangeMinPrice = function () {
     switch (typeField.value) {
       case 'bungalo': {
         priceField.min = 0;
@@ -123,11 +123,22 @@
     }
   };
 
-  roomNumberField.addEventListener('change', changeCapacityField);
-  timeOutField.addEventListener('change', changeTimeInField);
-  timeInField.addEventListener('change', changeTimeOutField);
-  typeField.addEventListener('change', changeMinPrice);
+  var addChangeField = function () {
+    roomNumberField.addEventListener('change', onChangeCapacityField);
+    timeOutField.addEventListener('change', onChangeTimeInField);
+    timeInField.addEventListener('change', onChangeTimeOutField);
+    typeField.addEventListener('change', onChangeMinPrice);
+  };
 
+  var removeChangeField = function () {
+    roomNumberField.removeEventListener('change', onChangeCapacityField);
+    timeOutField.removeEventListener('change', onChangeTimeInField);
+    timeInField.removeEventListener('change', onChangeTimeOutField);
+    typeField.removeEventListener('change', onChangeMinPrice);
+  };
+
+
+  // функция обновления формы
   var resetForm = function () {
     adForm.querySelector('#title').value = '';
     adForm.querySelector('#type').value = 'flat';
@@ -146,10 +157,12 @@
   };
 
   // Добавляем событие проверки результата отправки формы
-  adForm.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    window.backend.upload(new FormData(adForm), onLoad, onError);
-  });
+  var addUpload = function () {
+    adForm.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+      window.backend.upload(new FormData(adForm), onLoad, onError);
+    });
+  };
 
   // Функция показывающая сообщение об ошибке отправке данных
   var onError = function () {
@@ -161,7 +174,7 @@
   var onLoad = function () {
     document.querySelector('main').appendChild(successElement);
     openPopup(successElement);
-    window.map.resetPage();
+    window.main.resetPage();
   };
 
   // Функция закрытия попапа об отправке формы
@@ -169,7 +182,7 @@
     var success = document.querySelector('.success');
     var error = document.querySelector('.error');
 
-    document.removeEventListener('keydown', window.onPopupEscPress);
+    document.removeEventListener('keydown', onPopupEscPress);
     document.removeEventListener('click', openPopup);
     document.removeEventListener('click', errorButton);
 
@@ -180,14 +193,24 @@
     if (error) {
       document.querySelector('.error').remove();
     }
+
+    adForm.removeEventListener('submit', function (evt) {
+      evt.preventDefault();
+      window.backend.upload(new FormData(adForm), onLoad, onError);
+    });
   };
 
   // Функция открытия попапа об отправке формы
   var openPopup = function (popup) {
-    document.addEventListener('keydown', window.onPopupEscPress);
+    document.addEventListener('keydown', onPopupEscPress);
     document.addEventListener('click', errorButton);
     document.addEventListener('click', closePopup);
     document.querySelector('main').appendChild(popup);
+  };
+
+  // Функция закрытия попапа нажатием ESC
+  var onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, closePopup);
   };
 
   // добавляем неактивное состояние полям
@@ -204,16 +227,12 @@
     disableFields(isfielddisabled, textarea);
   };
 
-  // Функция закрытия попапа нажатием ESC
-  window.onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.data.escKeyCode) {
-      closePopup();
-    }
-  };
-
   window.form = {
     adForm: adForm,
     resetForm: resetForm,
-    errorElement: errorElement
+    errorElement: errorElement,
+    addUpload: addUpload,
+    addChangeField: addChangeField,
+    removeChangeField: removeChangeField
   };
 })();
