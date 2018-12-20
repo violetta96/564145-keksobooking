@@ -70,6 +70,7 @@
     window.form.addUpload();
     window.form.addChangeField();
     window.filter.addFilterChange();
+    loadPins();
   };
 
   // функция закрытия попапа
@@ -113,7 +114,10 @@
     window.photo.resetImages();
     window.form.removeChangeField();
     window.filter.removeFilterChange();
+    window.map.setMouseUpCallback(setActiveState);
   };
+
+  window.map.setMouseUpCallback(setActiveState);
 
   window.main = {
     resetPage: resetPage,

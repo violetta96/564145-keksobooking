@@ -4,10 +4,11 @@
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT = 84;
   var TOP = 130;
-  var LEFT = 200;
+  var LEFT = 0;
   var BOTTOM = 630;
-  var RIGHT = 900;
-  var isPageActive = false;
+  var RIGHT = 1200;
+  // var isPageActive = false;
+  var mouseUpCallback;
 
   var mapPinMain = document.querySelector('.map__pin--main');
   var addressInput = document.querySelector('#address');
@@ -17,12 +18,12 @@
     mapPinMain.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
 
-      window.main.setActiveState();
+      /* window.main.setActiveState();
 
       if (!isPageActive) {
         window.main.loadPins();
       }
-      isPageActive = true;
+      isPageActive = true;*/
 
       var startCoords = {
         x: evt.clientX,
@@ -72,6 +73,10 @@
 
       var onMouseUp = function (upEvt) {
         upEvt.preventDefault();
+        if (mouseUpCallback) {
+          mouseUpCallback();
+          mouseUpCallback = null;
+        }
         mapPinMain.addEventListener('click', setActiveAddressInput);
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
@@ -130,5 +135,8 @@
     setInactiveAddressField: setInactiveAddressField,
     resetPinMain: resetPinMain,
     mapPinMain: mapPinMain,
+    setMouseUpCallback: function (callback) {
+      mouseUpCallback = callback;
+    },
   };
 })();
