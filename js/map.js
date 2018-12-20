@@ -7,7 +7,6 @@
   var LEFT = 0;
   var BOTTOM = 630;
   var RIGHT = 1200;
-  // var isPageActive = false;
   var mouseUpCallback;
 
   var mapPinMain = document.querySelector('.map__pin--main');
@@ -17,13 +16,6 @@
   var addMapPinMove = function () {
     mapPinMain.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
-
-      /* window.main.setActiveState();
-
-      if (!isPageActive) {
-        window.main.loadPins();
-      }
-      isPageActive = true;*/
 
       var startCoords = {
         x: evt.clientX,
