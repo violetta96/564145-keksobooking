@@ -16,9 +16,9 @@
 
   // функция обновляющая фильтры
   var resetFilter = function () {
-    for (var i = 0; i < housingFeaturesAll.length; i++) {
-      housingFeaturesAll[i].checked = false;
-    }
+    housingFeaturesAll.forEach(function (housingFeature) {
+      housingFeature.checked = false;
+    });
 
     housingType.value = RESET_VALUE;
     housingPrice.value = RESET_VALUE;
@@ -32,9 +32,9 @@
 
   // функция добавляющая оброботчики событий на фильтры
   var addFilterChange = function () {
-    for (var i = 0; i < housingFeaturesAll.length; i++) {
-      housingFeaturesAll[i].addEventListener('change', onFilterChange);
-    }
+    housingFeaturesAll.forEach(function (housingFeature) {
+      housingFeature.addEventListener('change', onFilterChange);
+    });
 
     housingType.addEventListener('change', onFilterChange);
     housingPrice.addEventListener('change', onFilterChange);
@@ -43,9 +43,9 @@
   };
 
   var removeFilterChange = function () {
-    for (var i = 0; i < housingFeaturesAll.length; i++) {
-      housingFeaturesAll[i].removeEventListener('change', onFilterChange);
-    }
+    housingFeaturesAll.forEach(function (housingFeature) {
+      housingFeature.removeEventListener('change', onFilterChange);
+    });
 
     housingType.removeEventListener('change', onFilterChange);
     housingPrice.removeEventListener('change', onFilterChange);
@@ -87,13 +87,13 @@
   var compareFeatures = function (card) {
     var checkedFeatures = document.querySelectorAll('.map__checkbox:checked');
     var machedFeatures = 0;
-    for (var i = 0; i < checkedFeatures.length; i++) {
-      for (var j = 0; j < card.offer.features.length; j++) {
-        if (checkedFeatures[i].value === card.offer.features[j]) {
+    checkedFeatures.forEach(function (feature) {
+      card.offer.features.forEach(function (offer) {
+        if (feature.value === offer) {
           machedFeatures++;
         }
-      }
-    }
+      });
+    });
     return machedFeatures === checkedFeatures.length;
   };
 

@@ -7,20 +7,29 @@
   var LEFT = 200;
   var BOTTOM = 630;
   var RIGHT = 900;
+  var isPageActive = false;
 
   var mapPinMain = document.querySelector('.map__pin--main');
-  var addressInput = document.getElementById('address');
+  var addressInput = document.querySelector('#address');
 
   // добавление обработчика событий на главную метку
   var addMapPinMove = function () {
     mapPinMain.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
+
       window.main.setActiveState();
+
+      if (!isPageActive) {
+        window.main.loadPins();
+      }
+      isPageActive = true;
 
       var startCoords = {
         x: evt.clientX,
         y: evt.clientY
       };
+
+      var diffX = evt.clientX - mapPinMain.offsetLeft;
 
       var dragged = false;
 
@@ -34,7 +43,7 @@
         };
 
         startCoords = {
-          x: moveEvt.clientX,
+          x: moveEvt.clientX - diffX,
           y: moveEvt.clientY
         };
 
@@ -50,24 +59,20 @@
             break;
         }
 
-        switch (true) {
-          case ((mapPinMain.offsetLeft - shift.x) < LEFT):
-            mapPinMain.style.left = LEFT + 'px';
-            break;
-          case ((mapPinMain.offsetLeft - shift.x) > (RIGHT - MAIN_PIN_WIDTH / 2)) :
-            mapPinMain.style.left = (RIGHT - MAIN_PIN_WIDTH / 2) + 'px';
-            break;
-          default:
-            mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
-            break;
+        if (startCoords.x > RIGHT) {
+          mapPinMain.style.left = RIGHT + 'px';
+        } else if (startCoords.x < LEFT) {
+          mapPinMain.style.left = LEFT + 'px';
+        } else {
+          mapPinMain.style.left = startCoords.x + 'px';
         }
+
         setActiveAddressInput();
       };
 
       var onMouseUp = function (upEvt) {
         upEvt.preventDefault();
         mapPinMain.addEventListener('click', setActiveAddressInput);
-
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
 
@@ -99,8 +104,8 @@
 
   // функция для заполнения поля адреса в активном состоянии страницы
   var setActiveAddressInput = function () {
-    document.getElementById('address').value = calculateActiveMainPinCoordinats();
-    document.getElementById('address').readOnly = true;
+    document.querySelector('#address').value = calculateActiveMainPinCoordinats();
+    document.querySelector('#address').readOnly = true;
   };
 
   // функция для возвращения поля адресса в исходное положение
@@ -124,5 +129,6 @@
   window.map = {
     setInactiveAddressField: setInactiveAddressField,
     resetPinMain: resetPinMain,
+    mapPinMain: mapPinMain,
   };
 })();
