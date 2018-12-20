@@ -1,6 +1,13 @@
 'use strict';
 
 (function () {
+  var PRICE = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000,
+  };
+
   var adForm = document.querySelector('.ad-form');
   var roomNumberField = document.querySelector('#room_number');
   var capacityField = document.querySelector('#capacity');
@@ -15,13 +22,11 @@
   var selects = document.querySelectorAll('select');
   var inputs = document.querySelectorAll('input');
   var textarea = document.querySelectorAll('textarea');
+  var features = document.querySelectorAll('.feature__checkbox');
 
   //   Функция ограничения допустимых значений поля «Количество мест»
   var onChangeCapacityField = function () {
-    for (var i = 0; i < capacityFieldOptions.length; i++) {
-      capacityFieldOptions[i].disabled = true;
-    }
-    disableFields(false, capacityFieldOptions);
+    disableFields(true, capacityFieldOptions);
     switch (roomNumberField.value) {
       case '1': {
         capacityField.querySelector('option[value="1"]').disabled = false;
@@ -98,23 +103,23 @@
   var onChangeMinPrice = function () {
     switch (typeField.value) {
       case 'bungalo': {
-        priceField.min = 0;
-        priceField.placeholder = 0;
+        priceField.min = PRICE.bungalo;
+        priceField.placeholder = PRICE.bungalo;
         break;
       }
       case 'flat': {
-        priceField.min = 1000;
-        priceField.placeholder = 1000;
+        priceField.min = PRICE.flat;
+        priceField.placeholder = PRICE.flat;
         break;
       }
       case 'house': {
-        priceField.min = 5000;
-        priceField.placeholder = 5000;
+        priceField.min = PRICE.house;
+        priceField.placeholder = PRICE.house;
         break;
       }
       case 'palace': {
-        priceField.min = 10000;
-        priceField.placeholder = 10000;
+        priceField.min = PRICE.palace;
+        priceField.placeholder = PRICE.palace;
         break;
       }
       default: {
@@ -149,7 +154,6 @@
     adForm.querySelector('#timeout').value = '12:00';
     adForm.querySelector('#description').textContent = '';
 
-    var features = document.querySelectorAll('.feature__checkbox');
     for (var i = 0; i < features.length; i++) {
       features[i].checked = false;
     }

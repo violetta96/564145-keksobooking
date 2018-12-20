@@ -35,9 +35,11 @@
 
   var removeFiles = function () {
     var previewPhotoElements = previewPhotoContainer.querySelectorAll('.ad-form__photo');
-    for (var i = 0; i < previewPhotoElements.length; i++) {
-      previewPhotoContainer.removeChild(previewPhotoElements[i]);
-    }
+    previewPhotoElements.forEach(function (photo) {
+      if (photo.classList.contains('ad-form__photo')) {
+        previewPhotoContainer.removeChild(photo);
+      }
+    });
   };
 
   var removeAvatar = function () {

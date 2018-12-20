@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var CHECK_TIME = '0:00';
   var cardOfferTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
   // функция для задания типа жилья
@@ -25,16 +26,16 @@
   };
 
   // функция для создание фото жилья
-  var createCardPhotos = function (cardPhotosArr, offerElement) {
+  var createCardPhotos = function (cardPhotos, offerElement) {
     var photosFragment = document.createDocumentFragment();
     var photosList = offerElement.querySelector('.popup__photos');
-    var photoElements = offerElement.querySelector('.popup__photo');
-    photosList.removeChild(photoElements);
-    for (var i = 0; i < cardPhotosArr.length; i++) {
+    var photoElement = offerElement.querySelector('.popup__photo');
+    photosList.removeChild(photoElement);
+    for (var i = 0; i < cardPhotos.length; i++) {
       var img = document.createElement('img');
       img.className = 'popup__photo';
       img.alt = 'Фотография жилья';
-      img.src = cardPhotosArr[i];
+      img.src = cardPhotos[i];
       img.width = '45';
       img.height = '40';
       photosFragment.appendChild(img);
@@ -43,11 +44,12 @@
   };
 
   // функция для задания характеристик
-  var setFeatures = function (featuresArr, offerElement) {
+  var setFeatures = function (features, offerElement) {
     offerElement.querySelector('.popup__features').innerHTML = '';
-    for (var j = 0; j < featuresArr.length; j++) {
+    for (var j = 0; j < features.length; j++) {
       var newElement = document.createElement('li');
-      newElement.className = 'popup__feature popup__feature--' + featuresArr[j];
+      newElement.classList.add('popup__feature');
+      newElement.classList.add('popup__feature--' + features[j]);
       offerElement.querySelector('.popup__features').appendChild(newElement);
     }
   };
@@ -67,6 +69,7 @@
     offerElement.querySelector('.popup__description').textContent = card.offer.description;
     offerElement.querySelector('.popup__photos').appendChild(createCardPhotos(card.offer.photos, offerElement));
     hidePopupBlocks(card, offerElement);
+    offerElement.querySelector('.popup__close').addEventListener('click', window.main.closePopup);
     return offerElement;
   };
 
@@ -84,7 +87,7 @@
     if (!card.offer.price) {
       offerElement.querySelector('.popup__text--price').classList.add('hidden');
     }
-    if (card.offer.checkin === '0:00' || card.offer.checkout === '0:00') {
+    if (card.offer.checkin === CHECK_TIME || card.offer.checkout === CHECK_TIME) {
       offerElement.querySelector('.popup__text--time').classList.add('hidden');
     }
     if (card.offer.rooms === 0 || card.offer.guests === 0) {
