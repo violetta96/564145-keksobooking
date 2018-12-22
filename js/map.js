@@ -40,16 +40,14 @@
           y: moveEvt.clientY
         };
 
-        switch (true) {
-          case ((mapPinMain.offsetTop - shift.y) < TOP):
-            mapPinMain.style.top = TOP + 'px';
-            break;
-          case ((mapPinMain.offsetTop - shift.y) > (BOTTOM - MAIN_PIN_HEIGHT)) :
-            mapPinMain.style.top = (BOTTOM - MAIN_PIN_HEIGHT) + 'px';
-            break;
-          default:
-            mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
-            break;
+        var top = mapPinMain.offsetTop - shift.y;
+
+        if (top < TOP) {
+          mapPinMain.style.top = TOP + 'px';
+        } else if (top > (BOTTOM - MAIN_PIN_HEIGHT)) {
+          mapPinMain.style.top = (BOTTOM - MAIN_PIN_HEIGHT) + 'px';
+        } else {
+          mapPinMain.style.top = top + 'px';
         }
 
         if (startCoords.x > RIGHT) {

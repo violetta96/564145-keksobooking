@@ -24,22 +24,37 @@
   var textarea = document.querySelectorAll('textarea');
   var features = document.querySelectorAll('.feature__checkbox');
 
+
+  // добавляем неактивное состояние полям
+  var disableFields = function (isdisabled, fields) {
+    for (var i = 0; i < fields.length; i++) {
+      fields[i].disabled = isdisabled;
+    }
+  };
+
+  disableFields(true, capacityFieldOptions);
+
   //   Функция ограничения допустимых значений поля «Количество мест»
   var onChangeCapacityField = function () {
-    disableFields(true, capacityFieldOptions);
     switch (roomNumberField.value) {
       case '1': {
+        capacityField.querySelector('option[value="0"]').disabled = true;
         capacityField.querySelector('option[value="1"]').disabled = false;
+        capacityField.querySelector('option[value="2"]').disabled = true;
+        capacityField.querySelector('option[value="3"]').disabled = true;
         capacityField.querySelector('option[value="1"]').selected = true;
         break;
       }
       case '2': {
+        capacityField.querySelector('option[value="0"]').disabled = true;
         capacityField.querySelector('option[value="1"]').disabled = false;
         capacityField.querySelector('option[value="2"]').disabled = false;
+        capacityField.querySelector('option[value="3"]').disabled = true;
         capacityField.querySelector('option[value="1"]').selected = true;
         break;
       }
       case '3': {
+        capacityField.querySelector('option[value="0"]').disabled = true;
         capacityField.querySelector('option[value="1"]').disabled = false;
         capacityField.querySelector('option[value="2"]').disabled = false;
         capacityField.querySelector('option[value="3"]').disabled = false;
@@ -48,6 +63,9 @@
       }
       case '100': {
         capacityField.querySelector('option[value="0"]').disabled = false;
+        capacityField.querySelector('option[value="1"]').disabled = true;
+        capacityField.querySelector('option[value="2"]').disabled = true;
+        capacityField.querySelector('option[value="3"]').disabled = true;
         capacityField.querySelector('option[value="0"]').selected = true;
         break;
       }
@@ -217,13 +235,6 @@
     window.util.isEscEvent(evt, closePopup);
   };
 
-  // добавляем неактивное состояние полям
-  var disableFields = function (isdisabled, fields) {
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = isdisabled;
-    }
-  };
-
   // проверяем состояние полей
   window.disableFieldsCheck = function (isfielddisabled) {
     disableFields(isfielddisabled, inputs);
@@ -237,6 +248,6 @@
     errorElement: errorElement,
     addUpload: addUpload,
     addChangeField: addChangeField,
-    removeChangeField: removeChangeField
+    removeChangeField: removeChangeField,
   };
 })();
