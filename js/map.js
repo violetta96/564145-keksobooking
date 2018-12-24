@@ -5,7 +5,7 @@
   var MAIN_PIN_HEIGHT = 84;
   var TOP = 130;
   var LEFT = 0;
-  var BOTTOM = 630;
+  var BOTTOM = 630 - MAIN_PIN_HEIGHT;
   var RIGHT = 1200;
   var mouseUpCallback;
 
@@ -23,6 +23,7 @@
       };
 
       var diffX = evt.clientX - mapPinMain.offsetLeft;
+      var diffY = evt.clientY - mapPinMain.offsetTop;
 
       var dragged = false;
 
@@ -30,24 +31,19 @@
         moveEvt.preventDefault();
         dragged = true;
 
-        var shift = {
-          x: startCoords.x - moveEvt.clientX,
-          y: startCoords.y - moveEvt.clientY
-        };
 
         startCoords = {
           x: moveEvt.clientX - diffX,
-          y: moveEvt.clientY
+          y: moveEvt.clientY - diffY
         };
 
-        var top = mapPinMain.offsetTop - shift.y;
 
-        if (top < TOP) {
+        if (startCoords.y < TOP) {
           mapPinMain.style.top = TOP + 'px';
-        } else if (top > (BOTTOM - MAIN_PIN_HEIGHT)) {
-          mapPinMain.style.top = (BOTTOM - MAIN_PIN_HEIGHT) + 'px';
+        } else if (startCoords.y > BOTTOM) {
+          mapPinMain.style.top = BOTTOM + 'px';
         } else {
-          mapPinMain.style.top = top + 'px';
+          mapPinMain.style.top = startCoords.y + 'px';
         }
 
         if (startCoords.x > RIGHT) {
