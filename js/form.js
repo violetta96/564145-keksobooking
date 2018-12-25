@@ -10,9 +10,8 @@
 
   var adForm = document.querySelector('.ad-form');
   var roomNumberField = document.querySelector('#room_number');
-  var capacityField = document.querySelector('#capacity');
-  var capacityFieldOptions = capacityField.querySelectorAll('option');
   var typeField = document.querySelector('#type');
+  var capacityField = document.querySelector('#capacity');
   var priceField = document.querySelector('#price');
   var timeInField = document.querySelector('#timein');
   var timeOutField = document.querySelector('#timeout');
@@ -25,54 +24,31 @@
   var features = document.querySelectorAll('.feature__checkbox');
 
 
-  // добавляем неактивное состояние полям
-  var disableFields = function (isdisabled, fields) {
-    for (var i = 0; i < fields.length; i++) {
-      fields[i].disabled = isdisabled;
-    }
-  };
-
-  disableFields(true, capacityFieldOptions);
-
   //   Функция ограничения допустимых значений поля «Количество мест»
   var onChangeCapacityField = function () {
-    switch (roomNumberField.value) {
-      case '1': {
-        capacityField.querySelector('option[value="0"]').disabled = true;
-        capacityField.querySelector('option[value="1"]').disabled = false;
-        capacityField.querySelector('option[value="2"]').disabled = true;
-        capacityField.querySelector('option[value="3"]').disabled = true;
-        capacityField.querySelector('option[value="1"]').selected = true;
+    var capacity = parseInt(capacityField.value, 10);
+    var errorMessage = '';
+    var match;
+
+    switch (parseInt(roomNumberField.value, 10)) {
+      case 1:
+        match = capacity !== 1;
+        errorMessage = 'Невозможно добавить больше одного гостя в одну комнату';
         break;
-      }
-      case '2': {
-        capacityField.querySelector('option[value="0"]').disabled = true;
-        capacityField.querySelector('option[value="1"]').disabled = false;
-        capacityField.querySelector('option[value="2"]').disabled = false;
-        capacityField.querySelector('option[value="3"]').disabled = true;
-        capacityField.querySelector('option[value="1"]').selected = true;
+      case 2:
+        match = capacity !== 1 && capacity !== 2;
+        errorMessage = 'Невозможно добавить больше двух гостей в две комнаты';
         break;
-      }
-      case '3': {
-        capacityField.querySelector('option[value="0"]').disabled = true;
-        capacityField.querySelector('option[value="1"]').disabled = false;
-        capacityField.querySelector('option[value="2"]').disabled = false;
-        capacityField.querySelector('option[value="3"]').disabled = false;
-        capacityField.querySelector('option[value="1"]').selected = true;
+      case 3:
+        match = capacity === 0;
+        errorMessage = 'Невозможно добавить больше трех гостей в три комнаты';
         break;
-      }
-      case '100': {
-        capacityField.querySelector('option[value="0"]').disabled = false;
-        capacityField.querySelector('option[value="1"]').disabled = true;
-        capacityField.querySelector('option[value="2"]').disabled = true;
-        capacityField.querySelector('option[value="3"]').disabled = true;
-        capacityField.querySelector('option[value="0"]').selected = true;
+      case 100:
+        match = capacity !== 0;
+        errorMessage = 'Комнаты не для гостей';
         break;
-      }
-      default: {
-        break;
-      }
     }
+    capacityField.setCustomValidity(match ? errorMessage : '');
   };
 
   // Функция ограничения допустимых значений поля «Время заезда»
@@ -148,6 +124,7 @@
 
   var addChangeField = function () {
     roomNumberField.addEventListener('change', onChangeCapacityField);
+    capacityField.addEventListener('change', onChangeCapacityField);
     timeOutField.addEventListener('change', onChangeTimeInField);
     timeInField.addEventListener('change', onChangeTimeOutField);
     typeField.addEventListener('change', onChangeMinPrice);
@@ -155,6 +132,7 @@
 
   var removeChangeField = function () {
     roomNumberField.removeEventListener('change', onChangeCapacityField);
+    capacityField.removeEventListener('change', onChangeCapacityField);
     timeOutField.removeEventListener('change', onChangeTimeInField);
     timeInField.removeEventListener('change', onChangeTimeOutField);
     typeField.removeEventListener('change', onChangeMinPrice);
@@ -167,7 +145,7 @@
     adForm.querySelector('#type').value = 'flat';
     adForm.querySelector('#price').value = '';
     adForm.querySelector('#room_number').value = '1';
-    adForm.querySelector('#capacity').value = '3';
+    adForm.querySelector('#capacity').value = '1';
     adForm.querySelector('#timein').value = '12:00';
     adForm.querySelector('#timeout').value = '12:00';
     adForm.querySelector('#description').textContent = '';
@@ -233,6 +211,13 @@
   // Функция закрытия попапа нажатием ESC
   var onPopupEscPress = function (evt) {
     window.util.isEscEvent(evt, closePopup);
+  };
+
+  // добавляем неактивное состояние полям
+  var disableFields = function (isdisabled, fields) {
+    for (var i = 0; i < fields.length; i++) {
+      fields[i].disabled = isdisabled;
+    }
   };
 
   // проверяем состояние полей
